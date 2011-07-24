@@ -1,0 +1,51 @@
+ === Class Map ===
+Main class to handle all mapping functions.
+
+
+=== Attributes ===
+height - STRING
+width - STRING
+center - ARRAY [lat , lon]
+zoom - INETEGER
+geom - ARRAY: Contents of the array are a mix of google.map.Markers, google.maps.Polygons, or google.maps.Polylines
+nodes - ARRAY: Interal use.
+segements - ARRAY
+layers - ARRAY
+mapType - google,maps.MapTypeId.MAPTYPE: MAPTYPE can be ROADMAP, HYBRID, SATELLITE 
+scrollwheel - Boolean
+
+
+=== Methods ===
+
+init
+
+show
+
+hide
+
+clear_all
+
+list2polygon
+
+resize
+
+getLayerBounds
+
+geocode_address 
+
+showLatLng
+
+createFeature
+
+editFeature
+
+make_polygon
+
+draw_segemnts
+
+
+
+
+
+
+
