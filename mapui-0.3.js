@@ -5,7 +5,7 @@ A javascript class that creates movable <UL> DOM Elements whose <LI>
 can be dragged and dropped into one another. Styling is done with jQueryUI 1.8.11 
 which can be gotten here http://jqueryui.com
 
-Copyright (c) <year>, <copyright holder>
+Copyright (c) 2011, Wil Black
 All rights reserved.
 
 Redistribution and use in source and binary forms, with or without
@@ -22,7 +22,7 @@ modification, are permitted provided that the following conditions are met:
 THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS" AND
 ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED
 WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE
-DISCLAIMED. IN NO EVENT SHALL <COPYRIGHT HOLDER> BE LIABLE FOR ANY
+DISCLAIMED. IN NO EVENT SHALL WIL BLACK BE LIABLE FOR ANY
 DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES
 (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES;
 LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND
@@ -37,12 +37,18 @@ Map = {};
   Map.center = [44.565, -124];
   Map.zoom = 8;
 
-  Map.geom=null;  // This needs to change to []
-  Map.nodes=[];
-  Map.segments=[];
-  Map.layers=[];
+  Map.geom=null;  // This needs to change to []. This is only the latest active geom
+  Map.nodes=[];  // This is only the latest active nodes
+  Map.segments=[]; // This is only the latest active segments
+  Map.layers=[]; // A layer is a collection of features
   Map.mapType= google.maps.MapTypeId.ROADMAP;
   Map.scrollwheel = true;
+  Map.features=[]; // All feature associated with the map.
+  
+  Map.activeStrokeWeight = 6;
+  Map.inactiveStrokeWeight = 3;
+  Map.activeStrokeColor = '#000000'; 
+  Map.activeStrokeColor = '#FF0000';
   
 Map.init = function(div){
     /* Draw a map in the canvas given by the CSS selector string div.
@@ -73,6 +79,12 @@ Map.show = function(feature){
 
 Map.hide = function(feature){
     for (i in feature){ feature[i].geom.setMap(null); }
+};
+
+Map.features.hide_all = function() {
+	for (i in Map.features){
+		Map.features[i].hide();
+	}
 };
 
 Map.clear_all = function(){
@@ -181,12 +193,14 @@ Map.createFeature = function (type) {
 			Map.geom.setPosition(event.latLng);
 			
 		});
+		Map.features.push( new feature({'type':'point', 'geom':Map.geom}) );
 		break;	
 	case 'polygon':
 		Map.make_polygon();
+		
 		break;
 	case 'polyline':
-		//makePolygonGeom();
+		Map.make_polyline();
 		break;
 	case 'none':
 		//mapObj.clearState('none');
@@ -221,6 +235,7 @@ Map.editFeature = function (feature) {
 			$("[name=geom]").html("["+Map.geom.position.lat()+","+Map.geom.position.lng()+"]");
 		});
 		
+		
 		break;	
 	case 3:			// Polygon
 		var corners=[];
@@ -233,7 +248,7 @@ Map.editFeature = function (feature) {
 		Map.resize(layer);
 		break;
 	case 'polyline':
-		//makePolygonGeom();
+		
 		break;
 	case 'none':
 		//mapObj.clearState('none');
@@ -248,21 +263,39 @@ Map.make_polygon = function(corners) {
  * map boundary.
  */	
 	if (!arguments.length){
-		var b = Map.map.getBounds();
-		var c = b.getCenter();
-		var dx = .1*( b.getNorthEast().lng()-b.getSouthWest().lng() ) / 2;
-		var dy = .1*( b.getNorthEast().lat()-b.getSouthWest().lat() ) / 2;
-		var corners=[
-			new google.maps.LatLng(c.lat() + dy , c.lng() - dx ),
-		    new google.maps.LatLng(c.lat() + dy , c.lng() + dx ),
-		    new google.maps.LatLng(c.lat() - dy , c.lng() + dx ),
-		    new google.maps.LatLng(c.lat() - dy , c.lng() - dx )
-		];
+		corners = Map._make_corners();
 	} 
-	this._draw_segments(corners);
+	this._draw_segments(corners, 'polygon');
 };
 
-Map._draw_segments = function(corners){
+Map.make_polyline = function(corners) {
+	/* Takes in a corners array, corners are an array of google LatLngs.
+	 * They are not closed, this function closes them for you.
+	 * If no corners are given then it makes rectangle based on the current
+	 * map boundary.
+	 */	
+		if (!arguments.length){
+			corners = Map._make_corners();
+		} 
+		this._draw_segments(corners, 'polyline');
+	};
+
+Map._make_corners = function(){
+	var b = Map.map.getBounds();
+	var c = b.getCenter();
+	var dx = .1*( b.getNorthEast().lng()-b.getSouthWest().lng() ) / 2;
+	var dy = .1*( b.getNorthEast().lat()-b.getSouthWest().lat() ) / 2;
+	var corners=[
+		new google.maps.LatLng(c.lat() + dy , c.lng() - dx ),
+	    new google.maps.LatLng(c.lat() + dy , c.lng() + dx ),
+	    new google.maps.LatLng(c.lat() - dy , c.lng() + dx ),
+	    new google.maps.LatLng(c.lat() - dy , c.lng() - dx )
+	];
+	return corners;
+};
+
+	
+Map._draw_segments = function(corners, type){
 	// Given a list of lists of corners draw segments spanning them.
 	// And adds listeners to insert new corners in each segment.
 		
@@ -286,16 +319,22 @@ Map._draw_segments = function(corners){
 			i2=index;
 						
 			var index = Map.nodes.indexOf(this);
-			var path1 = Map.segments[i1].getPath();
-			var path2 = Map.segments[i2].getPath();
-			
-			path1.setAt(1,event.latLng);
-			path2.setAt(0,event.latLng);
+			if ( !(type=="polyline" && index==0) ){
+				console.log("in")
+				var path1 = Map.segments[i1].getPath();
+				path1.setAt(1,event.latLng);
+			}
+			if ( !(type=="polyline" && index==N) ){
+				var path2 = Map.segments[i2].getPath();
+				path2.setAt(0,event.latLng);
+			};
 		});
 				
-		
+				
 		if (i==corners.length-1){tmp=[corners.slice(-1)[0], corners[0]];}
+				
 		else {tmp = [corners[i],corners[i+1]];}
+		
 		Map.segments[i] = new google.maps.Polyline({			
 			path:tmp,
 			map:Map.map,
@@ -319,11 +358,33 @@ Map._draw_segments = function(corners){
 					Map.nodes[i].setMap(null);
 				}
 				for (i in Map.segments){Map.segments[i].setMap(null);}
-				Map._draw_segments(corners);
+				Map._draw_segments(corners, type);
 			});		
 		});
-		 // End if i>0
+				
+		new google.maps.event.addListener(Map.segments[i],'mouseover',function(event){
+			this.setOptions({
+				'strokeWeight':Map.activeStrokeWeight,
+				'strokeColor':Map.activeStrokeColor,
+			});
+		});
+		
+		new google.maps.event.addListener(Map.segments[i],'mouseout',function(event){
+			this.setOptions({
+				'strokeWeight':Map.inactiveStrokeWeight,
+				'strokeColor':Map.inactiveStrokeColor,
+			});	
+		});
+		
+		
 	}	// End for i in corners	
+	
+	// Removing the last segment if we are drawing a path
+	if (type=="polyline"){
+		var last = Map.segments.pop(-1);
+		last.setMap(null);
+	}
+		
 	coords=[];
 	for (i in this.nodes){
 		coords.push([this.nodes[i].position.lat(),this.nodes[i].position.lng()]);
@@ -331,10 +392,30 @@ Map._draw_segments = function(corners){
 	coords.push([this.nodes[0].position.lat(),this.nodes[0].position.lng()]);
 	$("[name=geom]").val(JSON.stringify(coords));
 	
+	Map.features.push(new feature({'type':'polygon', 'geom':{'nodes':Map.nodes,'segments':Map.segments}}) );
+	
 	//this._node_listeners();
 }	// End draw_nodes()
 
 
+feature = function(fobj){
+	this.geom=fobj.geom;
+	this.type=fobj.type;
+};
+
+feature.prototype.hide = function(){
+	if (this.type=="point"){
+		this.geom.setMap(null);
+	
+	} else if (this.type=="polygon"){
+		for (var j in this.geom.nodes){
+			this.geom.nodes[j].setMap(null);
+		}
+		for (var j in this.geom.segments){
+			this.geom.segments[j].setMap(null);
+		}
+	}
+};
 /****************************** MAP STYLES **************************************/
 
 style1 = [
