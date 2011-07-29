@@ -116,6 +116,21 @@ Map.list2polygon = function(list){
 	});
 	return out;
 };
+
+Map.list2polyline = function(list){
+	// Takes a list of lists of coordinates (lat, lon). Returns a polygon.
+	// Use out.setMap(Map.map) to show on the map. 
+	var path=[];
+	for (i in list){
+		path[i]=new google.maps.LatLng(list[i][0],list[i][1]);		
+	}
+	var out = new google.maps.Polyline({
+		path:path,
+		zIndex:-30,	
+	});
+	return out;
+};
+
 Map.resize = function(layer){
 	// Resizes and repositions a map to the elements in a given layer.
 	//Map.map.setZoom(20);
@@ -389,10 +404,12 @@ Map._draw_segments = function(corners, type){
 	for (i in this.nodes){
 		coords.push([this.nodes[i].position.lat(),this.nodes[i].position.lng()]);
 	}
-	coords.push([this.nodes[0].position.lat(),this.nodes[0].position.lng()]);
+	if (type == 'polygon'){
+		coords.push([this.nodes[0].position.lat(),this.nodes[0].position.lng()]);
+	}
 	$("[name=geom]").val(JSON.stringify(coords));
 	
-	Map.features.push(new feature({'type':'polygon', 'geom':{'nodes':Map.nodes,'segments':Map.segments}}) );
+	Map.features.push(new feature({'type':type, 'geom':{'nodes':Map.nodes,'segments':Map.segments}}) );
 	
 	//this._node_listeners();
 }	// End draw_nodes()
