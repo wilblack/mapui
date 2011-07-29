@@ -155,21 +155,28 @@ Map.getLayerBounds = function(layer){
 	return bounds;
 }
 
-Map.geocode_address = function(address) {
-    //var address = $("#ad1").val()+','+$("#city").val()+','+$("#zip").val()
-    //var address = $("#address").val();
-    geocoder = new google.maps.Geocoder()
+Map.geocode_address = function(address, show) {
+    /* Geocodes an address and optionally displays it on the map. 
+	  Inputs:
+		address - String 
+		show - Boolean, determines whether or not to show the marker on the map
+	*/ 
+	
+	if (arguments.length==1) show=true;
+  	geocoder = new google.maps.Geocoder()
 	geocoder.geocode( { 'address': address}, function(results, status) {
       if (status == google.maps.GeocoderStatus.OK) {
-        Map.map.setCenter(results[0].geometry.location);
-        var marker = new google.maps.Marker({
-            map: Map.map, 
-            position: results[0].geometry.location,
-         });
+	    Map.map.setCenter(results[0].geometry.location);
+	    map=null;
+	    if (show==true) map=Map.map;
+	    var marker = new google.maps.Marker({
+	        map: map, 
+	        position: results[0].geometry.location,
+	     });
+	    return marker;
       } else {
-        
-    	 alert("Geocode was not successful for the following reason: " + status);
-    	 return {'error':status}
+    	if (show==true) alert("Geocode was not successful for the following reason: " + status);
+    	return {'error':status}
       }
     });
 };
