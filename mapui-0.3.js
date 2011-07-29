@@ -158,15 +158,18 @@ Map.getLayerBounds = function(layer){
 Map.geocode_address = function(address) {
     //var address = $("#ad1").val()+','+$("#city").val()+','+$("#zip").val()
     //var address = $("#address").val();
-    geocoder.geocode( { 'address': address}, function(results, status) {
+    geocoder = new google.maps.Geocoder()
+	geocoder.geocode( { 'address': address}, function(results, status) {
       if (status == google.maps.GeocoderStatus.OK) {
-        map.setCenter(results[0].geometry.location);
+        Map.map.setCenter(results[0].geometry.location);
         var marker = new google.maps.Marker({
-            map: map, 
+            map: Map.map, 
             position: results[0].geometry.location,
          });
       } else {
-        alert("Geocode was not successful for the following reason: " + status);
+        
+    	 alert("Geocode was not successful for the following reason: " + status);
+    	 return {'error':status}
       }
     });
 };
