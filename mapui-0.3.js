@@ -72,6 +72,25 @@ Map.init = function(div){
     Map.map = new google.maps.Map(Map.div[0], myOptions);
 }
 
+
+Map.makeImageOverlay = function(imgUrl, sw, ne ){
+	/* creates a google.maps.GroundOverlay with the image located at imgUrl
+	 * and georeferred to the southeast corner sw = [lat, lon] and northeast 
+	 * corner ne = [lat, lon].
+	 * Returns the google map GroundOVerlay object.
+	 */
+	
+	var imgBounds = new google.maps.LatLngBounds(
+		new google.maps.LatLng(sw[0], sw[1]),
+		new google.maps.LatLng(ne[0], ne[1]));
+	
+	var overlay = new google.maps.GroundOverlay(
+		imgUrl,
+		imgBounds);
+	
+	return overlay;
+};
+
 Map.show = function(feature){
     // Takes a list of features and shows them on the current map.
 	for (i in feature){feature[i].geom.setMap(Map.map)}
@@ -230,7 +249,6 @@ Map.createFeature = function (type) {
 	case 'none':
 		//mapObj.clearState('none');
 		break;
-	
 	};
 }
 
