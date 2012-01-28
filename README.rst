@@ -23,7 +23,7 @@ Usage
 -----
 
 - Make a <div> on you page then run
-  :: Map.init("#map-canvas");
+::  Map.init("#map-canvas");
 
 
 Class: Map
