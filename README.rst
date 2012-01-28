@@ -9,11 +9,14 @@ See demo here
 -------------
 http://thedatamind.com/demos/mapui.html
 
-=== Class Map ===
+Class: Map
+----------
 Main class to handle all mapping functions.
 
 
-=== Attributes ===
+Attributes
+++++++++++
+
 height - STRING
 width - STRING
 center - ARRAY [lat , lon]
