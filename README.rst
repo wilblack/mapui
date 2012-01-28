@@ -18,6 +18,14 @@ Pre-Reqs
   ::  <script type="text/javascript" src="http://maps.google.com/maps/api/js?sensor=false&v=3.2"></script>
 
 
+
+Usage
+-----
+
+- Make a <div> on you page then run
+  :: Map.init("#map-canvas");
+
+
 Class: Map
 ----------
 Main class to handle all mapping functions.
