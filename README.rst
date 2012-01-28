@@ -9,6 +9,15 @@ See demo here
 -------------
 http://thedatamind.com/demos/mapui.html
 
+
+Pre-Reqs
+--------
+
+- You must include Google Maps api and JQuery
+  ::  <script type="text/javascript" src="http://code.jquery.com/jquery-1.7.1.min.js"></script>
+      <script type="text/javascript" src="http://maps.google.com/maps/api/js?sensor=false&v=3.2"></script>
+
+
 Class: Map
 ----------
 Main class to handle all mapping functions.
