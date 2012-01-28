@@ -15,9 +15,11 @@ Pre-Reqs
 
 You must include Google Maps api and JQuery
 
-::  <script type="text/javascript" src="http://code.jquery.com/jquery-1.7.1.min.js"></script>
+:: 
+    <script type="text/javascript" src="http://code.jquery.com/jquery-1.7.1.min.js"></script>
 
-::  <script type="text/javascript" src="http://maps.google.com/maps/api/js?sensor=false&v=3.2"></script>
+::  
+    <script type="text/javascript" src="http://maps.google.com/maps/api/js?sensor=false&v=3.2"></script>
 
 
 
@@ -26,7 +28,8 @@ Usage
 
 Make a <div> on you page then run
 
-::  Map.init("#map-canvas");
+::  
+    Map.init("#map-canvas");
 
 
 Class: Map
