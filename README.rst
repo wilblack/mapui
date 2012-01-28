@@ -13,7 +13,7 @@ http://thedatamind.com/demos/mapui.html
 Pre-Reqs
 --------
 
-- You must include Google Maps api and JQuery
+You must include Google Maps api and JQuery
   ::  <script type="text/javascript" src="http://code.jquery.com/jquery-1.7.1.min.js"></script>
   ::  <script type="text/javascript" src="http://maps.google.com/maps/api/js?sensor=false&v=3.2"></script>
 
@@ -22,8 +22,8 @@ Pre-Reqs
 Usage
 -----
 
-- Make a <div> on you page then run
-::  Map.init("#map-canvas");
+Make a <div> on you page then run
+  ::  Map.init("#map-canvas");
 
 
 Class: Map
