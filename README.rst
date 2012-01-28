@@ -17,45 +17,45 @@ Main class to handle all mapping functions.
 Attributes
 ++++++++++
 
-height - STRING
-width - STRING
-center - ARRAY [lat , lon]
-zoom - INETEGER
-geom - ARRAY: Contents of the array are a mix of google.map.Markers, google.maps.Polygons, or google.maps.Polylines
-nodes - ARRAY: Interal use.
-segements - ARRAY
-layers - ARRAY
-mapType - google,maps.MapTypeId.MAPTYPE: MAPTYPE can be ROADMAP, HYBRID, SATELLITE 
-scrollwheel - Boolean
+- height - STRING
+- width - STRING
+- center - ARRAY [lat , lon]
+- zoom - INETEGER
+- geom - ARRAY: Contents of the array are a mix of google.map.Markers, google.maps.Polygons, or google.maps.Polylines
+- nodes - ARRAY: Interal use.
+- segements - ARRAY
+- layers - ARRAY
+- mapType - google,maps.MapTypeId.MAPTYPE: MAPTYPE can be ROADMAP, HYBRID, SATELLITE 
+- scrollwheel - Boolean
 
+Methods
++++++++
 
-=== Methods ===
+- init
 
-init
+- show
 
-show
+- hide
 
-hide
+- clear_all
 
-clear_all
+- list2polygon
 
-list2polygon
+- resize
 
-resize
+- getLayerBounds
 
-getLayerBounds
+- geocode_address 
 
-geocode_address 
+- showLatLng
 
-showLatLng
+- createFeature
 
-createFeature
+- editFeature
 
-editFeature
+- make_polygon
 
-make_polygon
-
-draw_segemnts
+- draw_segemnts
 
 
 
