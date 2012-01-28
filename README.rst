@@ -1,10 +1,12 @@
 Written by Wil Black, wilblack21@gmail.com
+
 This work was originally inspired by my work at Advanced Research Corporation, http://oregonarc.com.
 You are free to use this software for commercial and non-commercial use, free of charge provided you 
 follow the FreeBSD License (see source code files).
 Copyright (c) 2011
 
-## See demo here
+See demo here
+-------------
 http://thedatamind.com/demos/mapui.html
 
 === Class Map ===
