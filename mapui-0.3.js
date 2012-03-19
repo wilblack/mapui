@@ -44,6 +44,8 @@ Map = {};
   Map.layers=[]; // A layer is a collection of features
   Map.mapType= google.maps.MapTypeId.ROADMAP;
   Map.scrollwheel = true;
+  Map.disableDefaultUI = false;
+  Map.styles = '';
   Map.features=[]; // All feature associated with the map.
   
   Map.activeStrokeWeight = 6;
@@ -65,6 +67,8 @@ Map.init = function(div){
 	  center: center,
 	  mapTypeId: this.mapType,
 	  scrollwheel:this.scrollwheel,
+	  disableDefaultUI:this.disableDefaultUI,
+	  styles : Map.styles, 
     };
     myOptions.mapTypeControlOptions={mapTypeIds:[google.maps.MapTypeId.ROADMAP,
                                                'plain',
@@ -479,4 +483,7 @@ style1 = [
    ]
  }
 ];
+
+
+
 
