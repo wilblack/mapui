@@ -30,3 +30,4 @@ Feature.prototype.load = function(){
 
 Feature.protoype.onClick = function(){
 };
+

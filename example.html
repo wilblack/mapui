@@ -1,0 +1,39 @@
+<!DOCTYPE HTML>
+<html>
+<head>
+<script type="text/javascript" src="http://173.255.213.55/wb/media/js/jquery-1.5.2.min.js"></script>
+<script type="text/javascript" src="http://maps.google.com/maps/api/js?sensor=false&v=3.2"></script>
+<script type="text/javascript" src="mapui.js"></script>
+<script type="text/javascript">
+$(document).ready(function(){
+  Map.init("#map-canvas");
+  Map.init;
+    
+});
+</script>
+
+<title>Map UI demo</title>
+
+</head>
+
+<body>
+<h2>Map UI Demo</h2>
+<div id="map-canvas"></div>
+
+<div id="map-control-panel">
+    <div>
+        <button onclick="Map.createFeature('point')">Draw Marker</button>
+        <button onclick="Map.createFeature('polyline')">Draw Path</button>
+        <button onclick="Map.createFeature('polygon')">Draw Area</button>
+        <button onclick="Map.features.hide_all()">Clear Map</button>
+  </div>
+  
+  <div>
+    <input type="text" name="address"></input>
+    <button onclick="Map.geocode_address($('[name=address]').val());">Geocode address</button>
+  </div>
+
+</div>
+</body>
+
+</html>
